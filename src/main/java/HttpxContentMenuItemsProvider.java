@@ -48,7 +48,7 @@ public class HttpxContentMenuItemsProvider implements ContextMenuItemsProvider, 
     }
 
     private enum BodyType {JSON, DATA};
-    private static final Collection<String> IGNORE_HEADERS = Arrays.asList("host:", "content-length:");
+    private final Collection<String> IGNORE_HEADERS = new ArrayList<>(Arrays.asList("host:", "content-length:"));
     private static final String PYTHON_TRUE = "True", PYTHON_FALSE = "False", PYTHON_NULL = "None";
 
     @Override
@@ -88,6 +88,7 @@ public class HttpxContentMenuItemsProvider implements ContextMenuItemsProvider, 
     private void copyMessages(HttpRequest httpRequest, boolean isHTTP2Request) {
         StringBuilder pythonCode = new StringBuilder("import httpx");
         String clientVersion = isHTTP2Request ? "client = httpx.Client(http2=True)" : "client = httpx.Client()";
+        if (isHTTP2Request) IGNORE_HEADERS.add("connection");
         pythonCode.append("\n\n").append(clientVersion);
         byte[] req = httpRequest.toByteArray().getBytes();
         String prefix = "request" + "_";
@@ -116,8 +117,6 @@ public class HttpxContentMenuItemsProvider implements ContextMenuItemsProvider, 
         }
         pythonCode.append(')');
 
-        api.logging().logToOutput(pythonCode.toString());
-
         Toolkit.getDefaultToolkit().getSystemClipboard()
                 .setContents(new StringSelection(pythonCode.toString()), this);
     }
@@ -143,13 +142,12 @@ public class HttpxContentMenuItemsProvider implements ContextMenuItemsProvider, 
                 py.append('"');
             }
         }
-        api.logging().logToOutput(String.valueOf(cookiesExist));
-        api.logging().logToOutput(py.toString());
+
         if (cookiesExist) py.append('}');
         return cookiesExist;
     }
 
-    private static void processHeaders(StringBuilder py, List<String> headers) {
+    private void processHeaders(StringBuilder py, List<String> headers) {
         boolean firstHeader = true;
         boolean requestLine = true;
         header_loop:
