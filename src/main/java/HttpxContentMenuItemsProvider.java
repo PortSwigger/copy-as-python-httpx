@@ -54,35 +54,30 @@ public class HttpxContentMenuItemsProvider implements ContextMenuItemsProvider, 
     @Override
     public List<Component> provideMenuItems(ContextMenuEvent event)
     {
-        if (event.isFromTool(ToolType.PROXY, ToolType.TARGET, ToolType.LOGGER))
-        {
-            List<Component> menuItemList = new ArrayList<>();
+        List<Component> menuItemList = new ArrayList<>();
 
-            JMenuItem http1RequestItem = new JMenuItem("Copy as HTTP/1.1");
-            JMenuItem http2RequestItem= new JMenuItem("Copy as HTTP/2");
+        JMenuItem http1RequestItem = new JMenuItem("Copy as HTTP/1.1");
+        JMenuItem http2RequestItem= new JMenuItem("Copy as HTTP/2");
 
-            HttpRequestResponse requestResponse = event.messageEditorRequestResponse().isPresent() ? event.messageEditorRequestResponse().get().requestResponse() : event.selectedRequestResponses().get(0);
+        HttpRequestResponse requestResponse = event.messageEditorRequestResponse().isPresent() ? event.messageEditorRequestResponse().get().requestResponse() : event.selectedRequestResponses().get(0);
 
-            http1RequestItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    copyMessages(requestResponse.request(), false);
-                }
-            });
-            menuItemList.add(http1RequestItem);
+        http1RequestItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                copyMessages(requestResponse.request(), false);
+            }
+        });
+        menuItemList.add(http1RequestItem);
 
-            http2RequestItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    copyMessages(requestResponse.request(), true);
-                }
-            });
-            menuItemList.add(http2RequestItem);
+        http2RequestItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                copyMessages(requestResponse.request(), true);
+            }
+        });
+        menuItemList.add(http2RequestItem);
 
-            return menuItemList;
-        }
-
-        return null;
+        return menuItemList;
     }
 
     private void copyMessages(HttpRequest httpRequest, boolean isHTTP2Request) {
