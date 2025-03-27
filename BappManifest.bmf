@@ -1,0 +1,13 @@
+Uuid: f219aeea68a142eb887a988f68860a0b
+ExtensionType: 1
+Name: Copy as Python httpx
+RepoName: copy-as-python-httpx
+ScreenVersion: 1.1
+SerialVersion: 1
+MinPlatformVersion: 19
+ProOnly: False
+Author: igomeow
+ShortDescription: Export HTTP/1.1 and HTTP/2 requests for use in Python.
+EntryPoint: target/burp-httpx-1.1.jar
+BuildCommand: mvn package -DskipTests=true -Dmaven.javadoc.skip=true -B
+SupportedProducts: Pro, Community
